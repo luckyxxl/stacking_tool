@@ -26,6 +26,7 @@ if CLIENT then
 	language.Add("tool.stacking.mode.pile", "Pile")
 	language.Add("tool.stacking.mode.pyramid", "Pyramid")
 	language.Add("tool.stacking.mode.3dpyramid", "3D Pyramid")
+	language.Add("tool.stacking.mode.wall", "Wall")
 	language.Add("tool.stacking.mode.cube", "Cube")
 	language.Add("tool.stacking.mode.box", "Box")
 	language.Add("tool.stacking.mode.stair", "Stair")
@@ -57,6 +58,12 @@ local function spawn_grid_3dpyramid(spawn, height)
 	end
 end
 
+local function spawn_grid_wall(spawn, height)
+	for y=0, height-1 do for x=0, height-1 do
+		spawn(Vector(x - (height-1)/2, 0, y))
+	end end
+end
+
 local function spawn_grid_cube(spawn, height)
 	for z=0, height-1 do for y=0, height-1 do for x=0, height-1 do
 		spawn(Vector(x - (height-1)/2, y - (height-1)/2, z))
@@ -81,6 +88,7 @@ local modes = {
 	{ "#tool.stacking.mode.pile", spawn_grid_pile },
 	{ "#tool.stacking.mode.pyramid", spawn_grid_pyramid },
 	{ "#tool.stacking.mode.3dpyramid", spawn_grid_3dpyramid },
+	{ "#tool.stacking.mode.wall", spawn_grid_wall },
 	{ "#tool.stacking.mode.cube", spawn_grid_cube },
 	{ "#tool.stacking.mode.box", spawn_grid_box },
 	{ "#tool.stacking.mode.stair", spawn_grid_stair },
