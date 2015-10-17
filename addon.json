@@ -1,0 +1,6 @@
+{
+	"title": "Stacking Tool",
+	"type": "tool",
+	"tags": "build",
+	"ignore": [".git/*", "*.jpg", "*.sh", "*.gma"]
+}
