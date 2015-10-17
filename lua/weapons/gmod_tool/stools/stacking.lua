@@ -21,7 +21,7 @@ TOOL.ClientConVar["height"] = 4
 if CLIENT then
 	language.Add("tool.stacking.name", "Stacking Tool")
 	language.Add("tool.stacking.desc", "Stack objects beautifully")
-	language.Add("tool.stacking.0", "Left-Click to stack objects, Reload to select base object")
+	language.Add("tool.stacking.0", "Left-Click to stack objects, Reload to select object")
 	language.Add("tool.stacking.mode", "Mode")
 	language.Add("tool.stacking.mode.pile", "Pile")
 	language.Add("tool.stacking.mode.pyramid", "Pyramid")
@@ -31,7 +31,7 @@ if CLIENT then
 	language.Add("tool.stacking.mode.box", "Box")
 	language.Add("tool.stacking.mode.stair", "Stair")
 	language.Add("tool.stacking.height", "Height")
-	language.Add("Undone_stacking", "Undone Stacking Props")
+	language.Add("Undone_stacking", "Undone Stacking")
 end
 
 local function spawn_grid_pile(spawn, height)
