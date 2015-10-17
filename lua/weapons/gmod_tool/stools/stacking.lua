@@ -17,6 +17,7 @@ TOOL.Name = "#tool.stacking.name"
 TOOL.ClientConVar["model"] = "models/props_borealis/bluebarrel001.mdl"
 TOOL.ClientConVar["mode"] = 1
 TOOL.ClientConVar["height"] = 4
+TOOL.ClientConVar["spawn_asleep"] = 0
 
 if CLIENT then
 	language.Add("tool.stacking.name", "Stacking Tool")
@@ -31,6 +32,7 @@ if CLIENT then
 	language.Add("tool.stacking.mode.box", "Box")
 	language.Add("tool.stacking.mode.stair", "Stair")
 	language.Add("tool.stacking.height", "Height")
+	language.Add("tool.stacking.spawn_asleep", "Spawn objects asleep")
 	language.Add("Undone_stacking", "Undone Stacking")
 end
 
@@ -106,6 +108,7 @@ function TOOL:LeftClick(trace)
 	local model = self:GetClientInfo("model")
 	local mode = self:GetClientNumber("mode")
 	local height = self:GetClientNumber("height")
+	local spawn_asleep = self:GetClientNumber("spawn_asleep")
 	
 	local up = vector_up
 	local right = up:Cross(trace.StartPos - trace.HitPos):GetNormalized()
@@ -129,6 +132,11 @@ function TOOL:LeftClick(trace)
 		entity:SetAngles(right:Angle())
 		entity:Spawn()
 		
+		if spawn_asleep ~= 0 then
+			local physobj = entity:GetPhysicsObject()
+			physobj:Sleep()
+		end
+		
 		undo.AddEntity(entity)
 	end
 	
@@ -151,4 +159,5 @@ function TOOL.BuildCPanel(CPanel)
 	CPanel:AddControl("Header", { Description = "#tool.stacking.desc" })
 	CPanel:AddControl("ComboBox", { Label = "#tool.stacking.mode", Options = list.Get("Modes") })
 	CPanel:AddControl("Slider", { Label = "#tool.stacking.height", Type = "Integer", Command = "stacking_height", Min = 1, Max = 10 })
+	CPanel:AddControl("Checkbox", { Label = "#tool.stacking.spawn_asleep", Command = "stacking_spawn_asleep" })
 end
