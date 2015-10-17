@@ -142,8 +142,6 @@ end
 function TOOL:Reload(trace)
 	if not IsValid(trace.Entity) then return false end
 	
-	if CLIENT then return true end
-	
 	RunConsoleCommand("stacking_model", trace.Entity:GetModel())
 	
 	return true
