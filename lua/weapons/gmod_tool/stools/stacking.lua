@@ -14,6 +14,7 @@
 TOOL.Category = "Construction"
 TOOL.Name = "#tool.stacking.name"
 
+TOOL.ClientConVar["class"] = "prop_physics"
 TOOL.ClientConVar["model"] = "models/props_borealis/bluebarrel001.mdl"
 TOOL.ClientConVar["mode"] = 1
 TOOL.ClientConVar["height"] = 4
@@ -105,6 +106,7 @@ function TOOL:LeftClick(trace)
 	
 	if CLIENT then return true end
 	
+	local class = self:GetClientInfo("class")
 	local model = self:GetClientInfo("model")
 	local mode = self:GetClientNumber("mode")
 	local height = self:GetClientNumber("height")
@@ -118,7 +120,7 @@ function TOOL:LeftClick(trace)
 	undo.SetPlayer(self:GetOwner())
 	
 	local spawn_grid = function(vec)
-		local entity = ents.Create("prop_physics")
+		local entity = ents.Create(class)
 		
 		entity:SetModel(model)
 		
@@ -150,6 +152,7 @@ end
 function TOOL:Reload(trace)
 	if not IsValid(trace.Entity) then return false end
 	
+	RunConsoleCommand("stacking_class", trace.Entity:GetClass())
 	RunConsoleCommand("stacking_model", trace.Entity:GetModel())
 	
 	return true
