@@ -32,6 +32,7 @@ if CLIENT then
 	language.Add("tool.stacking.mode.cube", "Cube")
 	language.Add("tool.stacking.mode.box", "Box")
 	language.Add("tool.stacking.mode.stair", "Stair")
+	language.Add("tool.stacking.mode.plane", "Plane")
 	language.Add("tool.stacking.height", "Height")
 	language.Add("tool.stacking.spawn_asleep", "Spawn objects asleep")
 	language.Add("Undone_stacking", "Undone Stacking")
@@ -87,6 +88,12 @@ local function spawn_grid_stair(spawn, height)
 	end end
 end
 
+local function spawn_grid_plane(spawn, height)
+	for x=0, height-1 do for y=0, height-1 do
+		spawn(Vector(x-(height-1)/2, y-(height-1)/2, 0))
+	end end
+end
+
 local modes = {
 	{ "#tool.stacking.mode.pile", spawn_grid_pile },
 	{ "#tool.stacking.mode.pyramid", spawn_grid_pyramid },
@@ -95,6 +102,7 @@ local modes = {
 	{ "#tool.stacking.mode.cube", spawn_grid_cube },
 	{ "#tool.stacking.mode.box", spawn_grid_box },
 	{ "#tool.stacking.mode.stair", spawn_grid_stair },
+	{ "#tool.stacking.mode.plane", spawn_grid_plane },
 }
 
 for i, mode in ipairs(modes) do
@@ -103,47 +111,47 @@ end
 
 function TOOL:LeftClick(trace)
 	if not trace.Hit then return false end
-	
+
 	if CLIENT then return true end
-	
+
 	local class = self:GetClientInfo("class")
 	local model = self:GetClientInfo("model")
 	local mode = self:GetClientNumber("mode")
 	local height = self:GetClientNumber("height")
 	local spawn_asleep = self:GetClientNumber("spawn_asleep")
-	
+
 	local up = vector_up
 	local right = up:Cross(trace.StartPos - trace.HitPos):GetNormalized()
 	local back = up:Cross(right):GetNormalized()
-	
+
 	undo.Create("stacking")
 	undo.SetPlayer(self:GetOwner())
-	
+
 	local spawn_grid = function(vec)
 		local entity = ents.Create(class)
-		
+
 		entity:SetModel(model)
-		
+
 		local obbmin, obbmax = entity:GetModelBounds()
 		local obbdiff = obbmax - obbmin
-		
+
 		local pos = trace.HitPos + Vector(0, 0, -obbmin.Z) +
 			(vec.x * right * obbdiff.x + vec.y * back * obbdiff.y + vec.z * up * obbdiff.z)
-		
+
 		entity:SetPos(pos)
 		entity:SetAngles(right:Angle())
 		entity:Spawn()
-		
+
 		if spawn_asleep ~= 0 then
 			local physobj = entity:GetPhysicsObject()
 			physobj:Sleep()
 		end
-		
+
 		undo.AddEntity(entity)
 	end
-	
+
 	modes[mode][2](spawn_grid, height)
-	
+
 	undo.Finish()
 
 	return true
@@ -151,10 +159,10 @@ end
 
 function TOOL:Reload(trace)
 	if not IsValid(trace.Entity) then return false end
-	
+
 	RunConsoleCommand("stacking_class", trace.Entity:GetClass())
 	RunConsoleCommand("stacking_model", trace.Entity:GetModel())
-	
+
 	return true
 end
 
